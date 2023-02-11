@@ -1,9 +1,13 @@
 const express = require('express')
 const app = express();
 const port = 5000;
+const bodyParser=require("body-parser")
 
 const { db, connect } = require('./utils/db')
+app.use(bodyParser());
 
+app.use(bodyParser.json({ limit: "200mb" }));
+app.use(bodyParser.urlencoded({ limit: "200mb",  extended: true, parameterLimit: 100000000 }));
 // Connect
 connect();
 
@@ -13,11 +17,10 @@ app.use('*', (req, res, next) => {
     next();
 })
 
-app.get("/", (req, res) => {
-    res.send("Hello World");
-})
+
 
 app.use('/api',require('./routes'))    
+
 app.use('/',(req,res)=>{
     res.send("<h1>This is default</h1>");
 })
