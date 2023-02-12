@@ -1,0 +1,22 @@
+drop table team_members;
+truncate table idea;
+create table team_members(
+    entry_id int not null auto_increment,
+    name varchar(255) not null,
+    foreign key (entry_id) references idea(entry_id) 
+);
+
+
+
+// change datatype of coulmn mobile to varchar(12) in idea table
+
+alter table idea modify mobile varchar(12);
+
+
+select * from idea;
+select * from team_members;
+
+
+// change datatype of column report to varchar(255) in idea table
+
+alter table idea modify report varchar(255);

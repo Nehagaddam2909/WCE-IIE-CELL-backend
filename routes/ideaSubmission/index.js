@@ -1,12 +1,24 @@
 const router = require('express').Router()
-const express=require("express")
-const { getALlResponses } = require('../../controllers/ideaSubmissionController')
+const multer = require("multer");
+const path = require('path');
 
-router.post('/submit',express.raw({type: "*/*"}), (req, res) => {
-    //   const {}  
-    console.log(req.body)
-    res.send("<h1>Hello to the world</h1>")
+const { getALlResponses, insertIntoTable } = require('../../controllers/ideaSubmissionController')
+
+// storage engine 
+
+const storage = multer.diskStorage({
+    destination: './public/upload/reports',
+    filename: (req, file, cb) => {
+        return cb(null, `${file.fieldname}_${Date.now()}${path.extname(file.originalname)}`)
+    }
 })
+const upload = multer({
+    storage: storage,
+    // limits: {
+    //     fileSize: 10
+    // }
+})
+router.post('/submit', upload.single('report'), insertIntoTable)
 
 router.get('/responses', getALlResponses)
 module.exports = router

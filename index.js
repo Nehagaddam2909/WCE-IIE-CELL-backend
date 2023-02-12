@@ -1,13 +1,16 @@
 const express = require('express')
 const app = express();
 const port = 5000;
-const bodyParser=require("body-parser")
 
 const { db, connect } = require('./utils/db')
-app.use(bodyParser());
+// cors
+const cors = require('cors');
+app.use(cors());
+// body parser
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-app.use(bodyParser.json({ limit: "200mb" }));
-app.use(bodyParser.urlencoded({ limit: "200mb",  extended: true, parameterLimit: 100000000 }));
+
 // Connect
 connect();
 
@@ -17,11 +20,13 @@ app.use('*', (req, res, next) => {
     next();
 })
 
+// public
+app.use(express.static('public'))
 
 
-app.use('/api',require('./routes'))    
+app.use('/api', require('./routes'))
 
-app.use('/',(req,res)=>{
+app.use('/', (req, res) => {
     res.send("<h1>This is default</h1>");
 })
 
