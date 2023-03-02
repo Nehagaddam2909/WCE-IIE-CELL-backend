@@ -37,8 +37,8 @@ const ideaSubmissionController = {
             const values = `'${title}', '${leader}', '${type}', '${phone}', '${email}', '${department}', '${year}','${report}', '${relevance}', '${innovation}', '${impact}', '${viability}', '${applicability}' , '${d}' `;
             console.log(values);
             const data = insert({ tableName: 'idea', values, custom: true });
-            if (!data || data == undefined) res.json({ success: false, message: "something went wrong!" })
             console.log("data : Ayela hai",);
+            if (!data || data == undefined) res.json({ success: false, message: "something went wrong!" })
             // get current entry_id from table idea
             db.query(`select * from idea where entry_id = (SELECT LAST_INSERT_ID())`, (err, currId) => {
                 if (err) {

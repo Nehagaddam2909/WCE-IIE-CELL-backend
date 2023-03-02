@@ -20,3 +20,7 @@ select * from team_members;
 // change datatype of column report to varchar(255) in idea table
 
 alter table idea modify report varchar(255);
+
+// change datatype of column relevance to varchar with max capacity in idea table
+
+alter table idea modify relevance varchar(255);
