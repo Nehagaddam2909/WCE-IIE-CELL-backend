@@ -20,3 +20,9 @@ select * from team_members;
 // change datatype of column report to varchar(255) in idea table
 
 alter table idea modify report varchar(255);
+
+
+//2-mar-2023
+create table users(email  varchar(255) PRIMARY KEY, password varchar(12));
+
+insert into table values('bfmonin@yahoo.com','iie_head');
