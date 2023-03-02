@@ -3,6 +3,13 @@ const app = express();
 const port = 5000;
 
 const { db, connect } = require('./utils/db')
+// cors
+const cors = require('cors');
+app.use(cors());
+// body parser
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 
 // Connect
 connect();
@@ -13,12 +20,13 @@ app.use('*', (req, res, next) => {
     next();
 })
 
-app.get("/", (req, res) => {
-    res.send("Hello World");
-})
+// public
+app.use(express.static('public'))
 
-app.use('/api',require('./routes'))    
-app.use('/',(req,res)=>{
+
+app.use('/api', require('./routes'))
+
+app.use('/', (req, res) => {
     res.send("<h1>This is default</h1>");
 })
 
