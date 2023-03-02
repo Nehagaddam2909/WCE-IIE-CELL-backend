@@ -26,3 +26,6 @@ alter table idea modify report varchar(255);
 create table users(email  varchar(255) PRIMARY KEY, password varchar(12));
 
 insert into table values('bfmonin@yahoo.com','iie_head');
+// change datatype of column relevance to varchar with max capacity in idea table
+
+alter table idea modify relevance varchar(255);
