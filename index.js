@@ -1,6 +1,8 @@
 const express = require('express')
 const app = express();
 const mongoose =  require('mongoose')
+const dotenv = require("dotenv").config();
+
 const port = 5000;
 
 // const { db, connect } = require('./utils/db')
@@ -13,10 +15,10 @@ app.use(express.urlencoded({ extended: true }));
 
 
 // Connect
-const dbURI = "mongodb+srv://iie_cell:wce_iie_cell@cluster0.n9wzgw7.mongodb.net/?retryWrites=true&w=majority"
+const dbURI = process.env.MongoDb_URI
 
 mongoose.connect(dbURI).then(()=>{
-    console.log("Database connected to :",dbURI);
+    // console.log("Database connected to :",dbURI);
     app.listen(port || 5000, () => {
         console.log("Server listning on ", port)
     })
