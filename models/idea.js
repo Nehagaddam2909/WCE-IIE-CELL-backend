@@ -1,7 +1,8 @@
 const mongoose=require("mongoose")
 const Schema=mongoose.Schema;
 
-const idea=new Schema({
+
+const IdeaSchema=new Schema({
     title:{
         type:String,
         required:true,
@@ -42,12 +43,12 @@ const idea=new Schema({
         type:String,
         required:true,
 
-    },
-    innovation:{
+
+    },innovation:{
         type:String,
         required:true,
-
-    },potential:{
+    }
+    ,potential:{
         type:String,
         required:true,
 
@@ -55,10 +56,8 @@ const idea=new Schema({
         type:String,
         required:true,
 
-    },
-    impact:{
-        type:String,
-        required:true,
+
+
     },applicability:{
         type:String,
         required:true,
@@ -71,5 +70,5 @@ const idea=new Schema({
 
 });
 
-
-export default idea;
+const idea = mongoose.model("idea",IdeaSchema)
+module.exports = idea;

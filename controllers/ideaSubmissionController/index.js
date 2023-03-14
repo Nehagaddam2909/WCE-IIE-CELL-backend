@@ -1,77 +1,48 @@
 const { get, insert, deleteLastInsertedRecord } = require('../../services/ideaSubmissionServices');
-const { db } = require('../../utils/db');
+// const { db } = require('../../utils/db');
 // const report = require('../../public/upload/reports/report_1624530000000.pdf');
 const ideaSubmissionController = {
-    getALlResponses: (req, res) => {
-        get('idea', (data) => {
-            console.log(data);
-            if (data) return res.json({ success: true, data });
-            return res.json({ success: false, message: 'Something went wrong' });
-        });
+    getALlResponses: async (req, res) => {
+        const data =  await get();
+        if(data?.length>0) return res.json({ success: true, data });
+        return res.json({ success: false, message: 'Something went wrong' }); 
     },
-    insertIntoTable: (req, res) => {
+    insertIntoTable: async (req, res) => {
+        console.log(req.body)
         const {
             title,
-            leader,
-            type,
-            phone,
+            team_leader,
+            role,
+            mobile_no,
             email,
             department,
             year,
-            team,
+            team_member,
             relevance,
             innovation,
-            impact,
+            potential,
             viability,
             applicability,
 
         } = req.body;
-        // get current data in yyyy-mm-dd hh:mm:ss format
-        // console.log("report dir : ", __dirname + '/public/upload/reports/' + req.file.filename);
-        // const report = require('../../public/upload/reports/' + req.file.filename);
         const report = req.file.filename;
-        console.log("report : ", report);
-        try {
-            const d = new Date().toISOString().slice(0, 19).replace('T', ' ');
+        const date_time = new Date().toISOString().slice(0, 19).replace('T', ' ');;
 
-            const values = `'${title}', '${leader}', '${type}', '${phone}', '${email}', '${department}', '${year}','${report}', '${relevance}', '${innovation}', '${impact}', '${viability}', '${applicability}' , '${d}' `;
-            console.log(values);
-            const data = insert({ tableName: 'idea', values, custom: true });
-            console.log("data : Ayela hai",);
-            if (!data || data == undefined) res.json({ success: false, message: "something went wrong!" })
-            // get current entry_id from table idea
-            db.query(`select * from idea where entry_id = (SELECT LAST_INSERT_ID())`, (err, currId) => {
-                if (err) {
-                    // console.log(err)
-                    return res.json({ success: false, message: 'Something went wrong' });
-                }
-                console.log("current id : ", currId[0].entry_id);
-                const teamMembers = team.split(',');
-                const values2 = [];
-
-                teamMembers.forEach((member) => {
-                    // console.log(member);
-                    values2.push(`${currId[0].entry_id}, '${member}'`);
-                })
-                // console.log(values2);
-                values2.forEach((value) => {
-                    if (!insert({ tableName: 'team_members', values: value, custom: false })) throw "Somethin went wrong!"
-                })
-                // const data2 = insert({ tableName: 'team_members', values2 })
-                return res.json({ success: true, data });
-                // return res.json({ success: false, message: 'Something went wrong' });
-            })
-
-        } catch (error) {
-            console.log(error);
-            db.query(`select * from idea where entry_id = (SELECT LAST_INSERT_ID()+1)`, (err, currId) => {
-                deleteLastInsertedRecord(currId[0].entry_id);
-                return res.json({ success: false, message: 'Something went wrong' });
-            })
-
+        // console.log("report : ", report);
+        const data =  await insert('idea',{title,team_leader,role,mobile_no,email,department,year,report,relevance,innovation,potential,viability,applicability,date_time});
+        if(data){
+            const entry_id =  data._id;
+            const teamMembers = team_member.split(',');
+            let f = 0;
+            teamMembers.forEach(async(team_member) => {
+                const data2 =  await insert('team_members',{entry_id,team_member});
+                if(!data2) { f = 1; return res.json({ success: false, message: 'Something went wrong' });}
+            });
+        if(!f)
+          return  res.json({ success: true, data });
+        else return res.json({ success: false, message: 'Something went wrong' });
         }
-
-
+      else  return res.json({ success: false, message: 'Something went wrong' });
     },
 
 };
